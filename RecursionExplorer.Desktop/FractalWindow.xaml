@@ -3,11 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:local="clr-namespace:RecursionExplorer.Desktop"
         mc:Ignorable="d"
         Title="Фракталы" Height="450" Width="800">
-    <DockPanel>
-        <DockPanel DockPanel.Dock="Top" Background="LightGray">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" DockPanel.Dock="Top" Background="LightGray">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -29,6 +32,14 @@
             </Grid>
         </DockPanel>
 
-        <Canvas Name="FractalCanvas" Background="White" />
-    </DockPanel>
+        <Border Name="FractalImageContainer" Grid.Row="1" Background="White" 
+                Loaded="FractalImageContainer_OnLoaded" 
+                MouseWheel="FractalImageContainer_OnMouseWheel" 
+                PreviewMouseWheel="FractalImageContainer_OnMouseWheel"
+                MouseLeftButtonUp="FractalImageContainer_OnMouseLeftButtonUp"
+                PreviewMouseLeftButtonDown="FractalImageContainer_OnMouseLeftButtonDown"
+                MouseMove="FractalImageContainer_OnMouseMove">
+            <Image Name="FractalImage"/>
+        </Border>
+    </Grid>
 </Window>
