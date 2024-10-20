@@ -16,8 +16,23 @@ namespace RecursionExplorer.Desktop;
 /// </summary>
 public partial class MainWindow : Window
 {
-    public MainWindow()
+    private readonly IWindowActivator _activator;
+
+    public MainWindow(IWindowActivator activator)
     {
+        _activator = activator;
+        
         InitializeComponent();
+    }
+
+    private void FractalButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        CreateWindowAndShow<FractalWindow>();
+    }
+
+    private void CreateWindowAndShow<TWindow>() where TWindow : Window
+    {
+        var window = _activator.CreateInstance<TWindow>();
+        window.Show();
     }
 }

@@ -5,8 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RecursionExplorer.Desktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Выберите программу" Height="450" Width="800">
+    <!-- Window grid -->
     <Grid>
+        <!-- Button grid -->
+        <Grid>
+            <!-- Define a row and column in the grid to center the content -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" /> <!-- Fills remaining space -->
+                <RowDefinition Height="Auto" /> <!-- Centered content -->
+                <RowDefinition Height="*" /> <!-- Fills remaining space -->
+            </Grid.RowDefinitions>
+        
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" /> <!-- Fills remaining space -->
+                <ColumnDefinition Width="Auto" /> <!-- Centered content -->
+                <ColumnDefinition Width="*" /> <!-- Fills remaining space -->
+            </Grid.ColumnDefinitions>
 
+            <!-- StackPanel for vertical buttons in the center -->
+            <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Label Content="Выберите программу:" HorizontalContentAlignment="Center" Margin="10" />
+                <Button Content="Фракталы" Width="150" Margin="10" Click="FractalButton_OnClick" />
+                <Button Content="Ханойские башни" Width="150" Margin="10" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>
