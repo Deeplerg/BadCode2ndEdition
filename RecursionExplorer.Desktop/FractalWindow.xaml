@@ -4,13 +4,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         mc:Ignorable="d"
-        Title="Фракталы" Height="450" Width="800">
+        Title="Фракталы" Height="450" Width="800" Background="#FF4196D3">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0" DockPanel.Dock="Top" Background="LightGray">
+        <DockPanel Grid.Row="0" DockPanel.Dock="Top" Background="#FF4196D3">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -39,7 +39,7 @@
                 MouseLeftButtonUp="FractalImageContainer_OnMouseLeftButtonUp"
                 PreviewMouseLeftButtonDown="FractalImageContainer_OnMouseLeftButtonDown"
                 MouseMove="FractalImageContainer_OnMouseMove">
-            <Image Name="FractalImage"/>
+            <Image Name="FractalImage" OpacityMask="#FFBBF7FF"/>
         </Border>
     </Grid>
 </Window>

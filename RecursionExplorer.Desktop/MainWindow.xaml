@@ -9,7 +9,7 @@
     <!-- Window grid -->
     <Grid>
         <!-- Button grid -->
-        <Grid>
+        <Grid Background="#FF4196D3">
             <!-- Define a row and column in the grid to center the content -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" /> <!-- Fills remaining space -->
@@ -27,7 +27,7 @@
             <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Label Content="Выберите программу:" HorizontalContentAlignment="Center" Margin="10" />
                 <Button Content="Фракталы" Width="150" Margin="10" Click="FractalButton_OnClick" />
-                <Button Content="Ханойские башни" Width="150" Margin="10" />
+                <Button Content="Ханойские башни" Width="150" Margin="10" Click="Button_Click" />
             </StackPanel>
         </Grid>
     </Grid>

@@ -35,4 +35,9 @@ public partial class MainWindow : Window
         var window = _activator.CreateInstance<TWindow>();
         window.Show();
     }
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        CreateWindowAndShow<HanoiTowersWindow>();
+    }
 }
