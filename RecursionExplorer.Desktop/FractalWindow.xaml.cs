@@ -17,7 +17,7 @@ public partial class FractalWindow : Window
     private Point _lastPanMousePosition;
     private bool _isDragging;
 
-    private double _zoomFactor = 1.0; // Default zoom factor
+    private double _zoomFactor = 23.0; // Default zoom factor
     private double _panOffsetX = 0.0; // X offset for panning
     private double _panOffsetY = 0.0; // Y offset for panning
 
