@@ -117,9 +117,11 @@ public class BurningShipFractalRenderer : IFractalRenderer
         // X, Y of the current pixel
         int pixelX = index % width;
         int pixelY = index / width;
+
+        zoom += 22;
         
-        double cReal = (pixelX - width / 2.0) * (3.0 / width) / zoom + panX - 0.5;
-        double cImaginary = (pixelY - height / 2.0) * (3.0 / height) / zoom + panY;
+        double cReal = (pixelX - width / 2.0) * (3.0 / width) / zoom + panX - 1.76; // was: -0.5
+        double cImaginary = (pixelY - height / 2.0) * (3.0 / height) / zoom + panY - 0.03;
 
         int iterations = CalculateIterations(0, 0, cReal, cImaginary);
 
