@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -42,6 +43,8 @@ public partial class FractalWindow : Window
 
     private const Key FullscreenModeKey = Key.F11; 
     private bool _isMaximized = false;
+
+    private Stopwatch _stopwatch = new Stopwatch();
     
     public FractalWindow()
     {
@@ -52,6 +55,8 @@ public partial class FractalWindow : Window
     
     private void Draw()
     {
+        _stopwatch.Restart();
+        
         DeviceComboBox.IsEditable = false;
         
         double width = FractalImageContainer.ActualWidth;
@@ -71,6 +76,15 @@ public partial class FractalWindow : Window
         bitmapImage.EndInit();
 
         FractalImage.Source = bitmapImage;
+
+        _stopwatch.Stop();
+        
+        double totalMilliseconds = _stopwatch.ElapsedMilliseconds;
+        int fps = (int)(1000 / totalMilliseconds);
+        LastDrawTookTimeLabel.Content = $"{totalMilliseconds}мс ({fps}FPS)";
+        
+        LastDrawTookInfoLabel.Visibility = Visibility.Visible;
+        LastDrawTookTimeLabel.Visibility = Visibility.Visible;
     }
 
     private static void MandelbrotKernel(Index1D index, ArrayView1D<int, Stride1D.Dense> data, int imgWidth, int imgHeight, double zoom, double panX, double panY)

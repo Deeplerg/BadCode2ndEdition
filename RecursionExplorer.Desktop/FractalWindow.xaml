@@ -33,6 +33,17 @@
                         <ComboBoxItem  Name="CudaDeviceComboBoxItem" Content="CUDA" />
                         <ComboBoxItem  Name="OpenClDeviceComboBoxItem" Content="OpenCL" />
                     </ComboBox>
+                    
+                    <Label Name="LastDrawTookInfoLabel" 
+                           Content="Последняя отрисовка заняла: "
+                           Visibility="Hidden"
+                           VerticalAlignment="Center" 
+                           Margin="10" />
+                    <Label Name="LastDrawTookTimeLabel"
+                           Content="0мс"
+                           Visibility="Hidden"
+                           VerticalAlignment="Center" 
+                           Margin="10" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
