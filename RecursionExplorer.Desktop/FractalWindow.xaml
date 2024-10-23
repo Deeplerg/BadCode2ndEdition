@@ -25,7 +25,7 @@
                         Width="150" 
                         VerticalAlignment="Center" 
                         Margin="10" 
-                        SelectedItem="CpuDeviceComboBoxItem"
+                        SelectedIndex="0"
                         SelectionChanged="DeviceComboBox_OnSelectionChanged">
                         <ComboBoxItem  Name="CpuDeviceComboBoxItem" Content="CPU" />
                         <ComboBoxItem  Name="CudaDeviceComboBoxItem" Content="CUDA" />
