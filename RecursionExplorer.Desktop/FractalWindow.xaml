@@ -10,7 +10,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0" DockPanel.Dock="Top" Background="LightGray">
+        <DockPanel Grid.Row="0" DockPanel.Dock="Top" Background="#FF4196D3">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
