@@ -216,7 +216,7 @@ public partial class FractalWindow : Window
             Topmost = false;
             WindowStyle = WindowStyle.SingleBorderWindow;
             WindowState = WindowState.Normal;
-            ResizeMode = ResizeMode.CanResizeWithGrip;
+            ResizeMode = ResizeMode.CanResize;
             ControlDockPanel.Visibility = Visibility.Visible;
 
             _isMaximized = false;

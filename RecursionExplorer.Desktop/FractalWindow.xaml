@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         Title="Фракталы" Height="450" Width="800"
         Loaded="FractalWindow_OnLoaded"
-        ResizeMode="CanResizeWithGrip">
+        ResizeMode="CanResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
