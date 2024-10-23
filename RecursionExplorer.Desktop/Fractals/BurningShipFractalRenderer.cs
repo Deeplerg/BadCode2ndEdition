@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows;
 using ILGPU;
 using ILGPU.Runtime;
 using ILGPU.Runtime.CPU;
@@ -17,6 +19,10 @@ public class BurningShipFractalRenderer : IFractalRenderer
     private const int MaxIterations = 1000;
     
     private Gradient _gradient;
+    
+    byte[]? _colorValues = null;
+    private int _previousWidth;
+    private int _previousHeight;
     
     public BurningShipFractalRenderer(RenderDevice device)
     {
@@ -69,7 +75,13 @@ public class BurningShipFractalRenderer : IFractalRenderer
     public Image<Rgba32> Render(int width, int height, double zoom, double panX, double panY)
     {
         using var buffer = _accelerator.Allocate1D<byte>(width * height);
-        
+
+        if (_colorValues is null || _previousWidth != width || _previousHeight != height)
+        {
+            _colorValues = new byte[width * height];
+            _previousWidth = width;
+            _previousHeight = height;
+        }
         var gridDimensions = new Index1D(width * height);
 
         double normalizedPanX = panX / width;
@@ -77,10 +89,9 @@ public class BurningShipFractalRenderer : IFractalRenderer
         
         _kernel.Invoke(gridDimensions, buffer.View, width, height, zoom, normalizedPanX, normalizedPanY);
         
-        var colorValues = new byte[width * height];
-    
         _accelerator.Synchronize();
-        buffer.CopyToCPU(colorValues);
+
+        buffer.CopyToCPU(_colorValues);
         
         var image = new Image<Rgba32>(width, height);
         for (int y = 0; y < height; y++)
