@@ -178,6 +178,25 @@ public partial class FractalWindow : Window
         Draw();
     }
 
+    private void AspectRatioButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        double imageWidth = FractalImageContainer.ActualWidth;
+        double imageHeight = FractalImageContainer.ActualHeight;
+        
+        double imageDimensionDifference = Math.Abs(imageWidth - imageHeight);
+
+        if (imageWidth > imageHeight)
+        {
+            this.Height += imageDimensionDifference;
+        }
+        else
+        {
+            this.Width += imageDimensionDifference;
+        }
+
+        Draw();
+    }
+
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key != FullscreenModeKey)

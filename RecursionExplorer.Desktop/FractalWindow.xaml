@@ -47,7 +47,14 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button Name="RedrawButton" Content="Перерисовать" HorizontalAlignment="Right" Margin="10" Click="RedrawButton_OnClick" />
+                    <Button Name="RedrawButton" 
+                            Content="Перерисовать" 
+                            HorizontalAlignment="Right" 
+                            Margin="10" Click="RedrawButton_OnClick" />
+                    <Button Name="AspectRatioButton" 
+                            Content="Уравнять соотношение сторон"
+                            HorizontalAlignment="Right" 
+                            Margin="10" Click="AspectRatioButton_OnClick" />
                 </StackPanel>
             </Grid>
         </DockPanel>
