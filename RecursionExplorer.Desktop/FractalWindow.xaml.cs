@@ -204,13 +204,14 @@ public partial class FractalWindow : Window
         _currentRenderDevice = device;
     }
 
-    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-    {
-    }
-
     private void FractalWindow_OnLoaded(object sender, RoutedEventArgs e)
     {
         KeyDown += OnKeyDown;
+    }
+
+    private void RedrawButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        Draw();
     }
 
     private void OnKeyDown(object sender, KeyEventArgs e)
