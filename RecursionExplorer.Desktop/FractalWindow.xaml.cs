@@ -21,6 +21,7 @@ using SixLabors.ImageSharp.Processing.Processors.Convolution;
 using SixLabors.ImageSharp.Processing.Processors.Effects;
 using Color = SixLabors.ImageSharp.Color;
 using Point = System.Windows.Point;
+using ResizeMode = System.Windows.ResizeMode;
 
 namespace RecursionExplorer.Desktop;
 
@@ -38,6 +39,9 @@ public partial class FractalWindow : Window
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private IFractalRenderer _renderer;
     private RenderDevice _currentRenderDevice;
+
+    private const Key FullscreenModeKey = Key.F11; 
+    private bool _isMaximized = false;
     
     public FractalWindow()
     {
@@ -46,7 +50,7 @@ public partial class FractalWindow : Window
         CreateNewRenderer(RenderDevice.CPU);
     }
     
-    private async void Draw()
+    private void Draw()
     {
         DeviceComboBox.IsEditable = false;
         
@@ -184,5 +188,42 @@ public partial class FractalWindow : Window
     {
         _renderer = new BurningShipFractalRenderer(device);
         _currentRenderDevice = device;
+    }
+
+    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+    {
+    }
+
+    private void FractalWindow_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        KeyDown += OnKeyDown;
+    }
+
+    private void OnKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key != FullscreenModeKey)
+            return;
+
+        if (!_isMaximized)
+        {
+            WindowStyle = WindowStyle.None;
+            WindowState = WindowState.Maximized;
+            ResizeMode = ResizeMode.NoResize;
+            ControlDockPanel.Visibility = Visibility.Collapsed;
+            
+            _isMaximized = true;
+        }
+        else
+        {
+            Topmost = false;
+            WindowStyle = WindowStyle.SingleBorderWindow;
+            WindowState = WindowState.Normal;
+            ResizeMode = ResizeMode.CanResizeWithGrip;
+            ControlDockPanel.Visibility = Visibility.Visible;
+
+            _isMaximized = false;
+        }
+
+        Draw();
     }
 }

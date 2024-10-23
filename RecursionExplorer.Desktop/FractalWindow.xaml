@@ -4,13 +4,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         mc:Ignorable="d"
-        Title="Фракталы" Height="450" Width="800">
+        Title="Фракталы" Height="450" Width="800"
+        Loaded="FractalWindow_OnLoaded"
+        ResizeMode="CanResizeWithGrip">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0" DockPanel.Dock="Top" Background="#FF4196D3">
+        <DockPanel Name="ControlDockPanel" Grid.Row="0" DockPanel.Dock="Top" Background="#FF4196D3">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -34,7 +36,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button Content="Сгенерировать" HorizontalAlignment="Right" Margin="10" />
+                    <Button Content="Сгенерировать" HorizontalAlignment="Right" Margin="10" Click="ButtonBase_OnClick" />
                     <Button Content="Отмена" HorizontalAlignment="Right" Margin="10" />
                 </StackPanel>
             </Grid>
