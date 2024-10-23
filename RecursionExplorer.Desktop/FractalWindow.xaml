@@ -19,15 +19,23 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <Label Content="Тип фрактала:" VerticalAlignment="Center" Margin="10" />
-                    <ComboBox Name="FractalComboBox" Width="150" VerticalAlignment="Center" Margin="10">
-                        <ComboBoxItem  Name="MandelbrotItem" Content="Мандельброт" />
+                    <Label Content="Устройство:" VerticalAlignment="Center" Margin="10" />
+                    <ComboBox 
+                        Name="DeviceComboBox" 
+                        Width="150" 
+                        VerticalAlignment="Center" 
+                        Margin="10" 
+                        SelectedItem="CpuDeviceComboBoxItem"
+                        SelectionChanged="DeviceComboBox_OnSelectionChanged">
+                        <ComboBoxItem  Name="CpuDeviceComboBoxItem" Content="CPU" />
+                        <ComboBoxItem  Name="CudaDeviceComboBoxItem" Content="CUDA" />
+                        <ComboBoxItem  Name="OpenClDeviceComboBoxItem" Content="OpenCL" />
                     </ComboBox>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button Content="Сгенерировать" HorizontalAlignment="Right" Margin="10" Click="DrawButton_OnClick" />
-                    <Button Content="Отмена" HorizontalAlignment="Right" Margin="10" Click="CancelButton_OnClick"/>
+                    <Button Content="Сгенерировать" HorizontalAlignment="Right" Margin="10" />
+                    <Button Content="Отмена" HorizontalAlignment="Right" Margin="10" />
                 </StackPanel>
             </Grid>
         </DockPanel>

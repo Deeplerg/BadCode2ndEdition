@@ -3,6 +3,7 @@ using ILGPU;
 using ILGPU.Runtime;
 using ILGPU.Runtime.CPU;
 using ILGPU.Runtime.Cuda;
+using ILGPU.Runtime.OpenCL;
 using RecursionExplorer.Desktop.Fractals.Colors;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -15,7 +16,7 @@ public class BurningShipFractalRenderer : IFractalRenderer
     private readonly Action<Index1D, ArrayView1D<byte, Stride1D.Dense>, int, int, double, double, double> _kernel;
     private const int MaxIterations = 1000;
     
-    private Gradient gradient;
+    private Gradient _gradient;
     
     public BurningShipFractalRenderer(RenderDevice device)
     {
@@ -24,10 +25,17 @@ public class BurningShipFractalRenderer : IFractalRenderer
         switch (device)
         {
             case RenderDevice.CPU:
-                _accelerator = context.GetImplicitCPUAccelerator();
+                _accelerator = context.CreateCPUAccelerator(0);
                 break;
-            case RenderDevice.GPU:
+            case RenderDevice.CUDA:
+                GuardAgainstNoDevice<CudaDevice>(context, nameof(RenderDevice.CUDA));
+                
                 _accelerator = context.CreateCudaAccelerator(0);
+                break;
+            case RenderDevice.OpenCL:
+                GuardAgainstNoDevice<CLDevice>(context, nameof(RenderDevice.OpenCL));
+
+                _accelerator = context.CreateCLAccelerator(0);
                 break;
             default:
                 throw new InvalidEnumArgumentException(
@@ -48,7 +56,7 @@ public class BurningShipFractalRenderer : IFractalRenderer
         //     new GradientColorArea(0,         Color.White.ToPixel<Rgba32>())
         // ]);
         
-        gradient = new Gradient(new[]
+        _gradient = new Gradient(new[]
         {
             new GradientColorZone(0,       Color.Black.ToPixel<Rgba32>()),
             new GradientColorZone(0.0625,  Color.Red.ToPixel<Rgba32>()),
@@ -195,6 +203,34 @@ public class BurningShipFractalRenderer : IFractalRenderer
         // Normalize to [0,1]
         double normalizedIteration = iterationValue / (double)MaxIterations;
 
-        return gradient.CalculateColor(normalizedIteration);
+        return _gradient.CalculateColor(normalizedIteration);
+    }
+
+    private void GuardAgainstNoDevice<TDevice>(Context context, string? deviceName = null)
+        where TDevice : Device
+    {
+        var clDevices = context.GetDevices<TDevice>();
+        if (clDevices.Count == 0)
+            throw new NotSupportedException(
+                $"No {deviceName ?? typeof(TDevice).Name} {(deviceName is null ? string.Empty : "device ")}found.");
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _accelerator.Dispose();
+        }
+    }
+
+    ~BurningShipFractalRenderer()
+    {
+        Dispose(false);
     }
 }

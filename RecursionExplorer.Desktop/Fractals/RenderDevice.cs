@@ -3,5 +3,6 @@
 public enum RenderDevice
 {
     CPU,
-    GPU
+    CUDA,
+    OpenCL
 }

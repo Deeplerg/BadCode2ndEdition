@@ -37,16 +37,19 @@ public partial class FractalWindow : Window
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private IFractalRenderer _renderer;
+    private RenderDevice _currentRenderDevice;
     
     public FractalWindow()
     {
         InitializeComponent();
 
-        _renderer = new BurningShipFractalRenderer(RenderDevice.GPU);
+        CreateNewRenderer(RenderDevice.CUDA);
     }
     
-    private void Draw()
+    private async void Draw()
     {
+        DeviceComboBox.IsEditable = false;
+        
         double width = FractalImageContainer.ActualWidth;
         double height = FractalImageContainer.ActualHeight;
 
@@ -96,19 +99,6 @@ public partial class FractalWindow : Window
         data[index] = colorValue;
     }
 
-    private void DrawButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        object selectedItem = FractalComboBox.SelectedItem;
-        string fractalName = selectedItem is null ? "None" : ((ComboBoxItem)selectedItem).Name;
-
-        MessageBox.Show("Selected fractal: " + fractalName);
-    }
-
-    private async void CancelButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        await _cancellationTokenSource.CancelAsync();
-    }
-
     private void FractalImageContainer_OnLoaded(object? sender, EventArgs e)
     {
         Draw();
@@ -154,5 +144,45 @@ public partial class FractalWindow : Window
         _lastPanMousePosition = currentMousePosition;
 
         Draw();
+    }
+
+    private void DeviceComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        string? name = (DeviceComboBox.SelectedItem as ComboBoxItem)?.Name;
+        if (string.IsNullOrEmpty(name))
+            return;
+
+        
+        var device = GetRenderDeviceFromComboBox(name);
+        if (device == _currentRenderDevice)
+            return;
+
+        var currentRenderer = _renderer;
+        try
+        {
+            CreateNewRenderer(device);
+            currentRenderer.Dispose();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Error! " + ex.Message);
+        }
+    }
+
+    private RenderDevice GetRenderDeviceFromComboBox(string name)
+    {
+        return name switch
+        {
+            "CpuDeviceComboBoxItem" => RenderDevice.CPU,
+            "CudaDeviceComboBoxItem" => RenderDevice.CUDA,
+            "OpenClDeviceComboBoxItem" => RenderDevice.OpenCL,
+            _ => throw new ArgumentException($"No known {nameof(RenderDevice)} for {name}.")
+        };
+    }
+    
+    private void CreateNewRenderer(RenderDevice device)
+    {
+        _renderer = new BurningShipFractalRenderer(device);
+        _currentRenderDevice = device;
     }
 }
