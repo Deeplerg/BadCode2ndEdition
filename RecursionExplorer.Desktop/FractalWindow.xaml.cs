@@ -196,6 +196,11 @@ public partial class FractalWindow : Window
 
         Draw();
     }
+    
+    private void FractalWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        Draw();
+    }
 
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
