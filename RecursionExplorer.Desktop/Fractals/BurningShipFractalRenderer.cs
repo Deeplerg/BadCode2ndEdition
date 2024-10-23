@@ -94,17 +94,21 @@ public class BurningShipFractalRenderer : IFractalRenderer
         buffer.CopyToCPU(_colorValues);
         
         var image = new Image<Rgba32>(width, height);
-        for (int y = 0; y < height; y++)
+        image.ProcessPixelRows(accessor =>
         {
-            for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
             {
-                byte colorValue = colorValues[y * width + x];
-                var fractalColor = GetFractalColor(colorValue);
-    
-                image[x, y] = fractalColor;
+                var row = accessor.GetRowSpan(y);
+                for (int x = 0; x < width; x++)
+                {
+                    byte colorValue = _colorValues[y * width + x];
+                    var fractalColor = GetFractalColor(colorValue);
+                    
+                    row[x] = fractalColor;
+                }
             }
-        }
-    
+        });
+        
         return image;
     }
     
