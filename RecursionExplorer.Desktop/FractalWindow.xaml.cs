@@ -43,7 +43,7 @@ public partial class FractalWindow : Window
     {
         InitializeComponent();
 
-        CreateNewRenderer(RenderDevice.CUDA);
+        CreateNewRenderer(RenderDevice.CPU);
     }
     
     private async void Draw()
