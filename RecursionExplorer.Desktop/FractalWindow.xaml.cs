@@ -1,26 +1,12 @@
 ﻿using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using ILGPU;
-using ILGPU.Runtime;
-using ILGPU.Runtime.CPU;
-using ILGPU.Runtime.Cuda;
 using RecursionExplorer.Desktop.Fractals;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing;
-using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Processing.Processors.Convolution;
-using SixLabors.ImageSharp.Processing.Processors.Effects;
-using Color = SixLabors.ImageSharp.Color;
 using Point = System.Windows.Point;
 using ResizeMode = System.Windows.ResizeMode;
 
@@ -36,46 +22,30 @@ public partial class FractalWindow : Window
     private double _panOffsetY = 0.0; // Y offset for panning
 
     private const double ZoomDelta = 0.1;
-
-    private readonly CancellationTokenSource _cancellationTokenSource = new();
     private IFractalRenderer _renderer;
     private RenderDevice _currentRenderDevice;
 
     private const Key FullscreenModeKey = Key.F11; 
     private bool _isMaximized = false;
 
-    private Stopwatch _stopwatch = new Stopwatch();
+    private readonly Stopwatch _stopwatch = new Stopwatch();
     
     public FractalWindow()
     {
         InitializeComponent();
 
+        _renderer = null!; // clear the uninitialized warning
         CreateNewRenderer(RenderDevice.CPU);
     }
     
     private void Draw()
     {
-        _stopwatch.Restart();
-        
         DeviceComboBox.IsEditable = false;
         
-        double width = FractalImageContainer.ActualWidth;
-        double height = FractalImageContainer.ActualHeight;
+        _stopwatch.Restart();
 
-        var imageWidth = (int)width;
-        var imageHeight = (int)height;
-        
-        var image = _renderer.Render(imageWidth, imageHeight, _zoomFactor, _panOffsetX, _panOffsetY);
-
-        var stream = new MemoryStream();
-        image.SaveAsPng(stream);
-        
-        BitmapImage bitmapImage = new BitmapImage();
-        bitmapImage.BeginInit();
-        bitmapImage.StreamSource = stream;
-        bitmapImage.EndInit();
-
-        FractalImage.Source = bitmapImage;
+        var image = RenderImage();
+        SaveImage(image);
 
         _stopwatch.Stop();
         
@@ -87,34 +57,45 @@ public partial class FractalWindow : Window
         LastDrawTookTimeLabel.Visibility = Visibility.Visible;
     }
 
-    private static void MandelbrotKernel(Index1D index, ArrayView1D<int, Stride1D.Dense> data, int imgWidth, int imgHeight, double zoom, double panX, double panY)
+    private Image<Rgba32> RenderImage()
     {
-        int x = index % imgWidth;
-        int y = index / imgWidth;
+        double width = FractalImageContainer.ActualWidth;
+        double height = FractalImageContainer.ActualHeight;
 
-        // Adjust coordinates based on zoom and pan, using higher precision for zoom
-        double real = (x - imgWidth / 2.0) * (3.0 / imgWidth) / zoom - panX - 0.5;
-        double imaginary = (y - imgHeight / 2.0) * (3.0 / imgHeight) / zoom - panY;
+        var imageWidth = (int)width;
+        var imageHeight = (int)height;
+        
+        return _renderer.Render(imageWidth, imageHeight, _zoomFactor, _panOffsetX, _panOffsetY);
+    }
 
-        // Mandelbrot iteration
-        double zx = 0.0;
-        double zy = 0.0;
-        int iteration = 0;
+    private void SaveImage(Image<Rgba32> image)
+    {
+        var stream = new MemoryStream();
+        image.SaveAsPng(stream);
+        
+        BitmapImage bitmapImage = new BitmapImage();
+        bitmapImage.BeginInit();
+        bitmapImage.StreamSource = stream;
+        bitmapImage.EndInit();
 
-        // Scale the maximum iterations with the zoom level to avoid unnecessary work at deep zoom
-        int maxIteration = 1000;
-
-        while (zx * zx + zy * zy < 4.0 && iteration < maxIteration)
+        FractalImage.Source = bitmapImage;
+    }
+    
+    private RenderDevice GetRenderDeviceFromComboBox(string name)
+    {
+        return name switch
         {
-            double temp = zx * zx - zy * zy + real;
-            zy = 2.0 * zx * zy + imaginary;
-            zx = temp;
-            iteration++;
-        }
-
-        // Map iterations to color (grayscale)
-        int colorValue = iteration == maxIteration ? 0 : (iteration % 256);
-        data[index] = colorValue;
+            "CpuDeviceComboBoxItem" => RenderDevice.CPU,
+            "CudaDeviceComboBoxItem" => RenderDevice.CUDA,
+            "OpenClDeviceComboBoxItem" => RenderDevice.OpenCL,
+            _ => throw new ArgumentException($"No known {nameof(RenderDevice)} for {name}.")
+        };
+    }
+    
+    private void CreateNewRenderer(RenderDevice device)
+    {
+        _renderer = new BurningShipFractalRenderer(device);
+        _currentRenderDevice = device;
     }
 
     private void FractalImageContainer_OnLoaded(object? sender, EventArgs e)
@@ -185,23 +166,6 @@ public partial class FractalWindow : Window
         {
             MessageBox.Show("Error! " + ex.Message);
         }
-    }
-
-    private RenderDevice GetRenderDeviceFromComboBox(string name)
-    {
-        return name switch
-        {
-            "CpuDeviceComboBoxItem" => RenderDevice.CPU,
-            "CudaDeviceComboBoxItem" => RenderDevice.CUDA,
-            "OpenClDeviceComboBoxItem" => RenderDevice.OpenCL,
-            _ => throw new ArgumentException($"No known {nameof(RenderDevice)} for {name}.")
-        };
-    }
-    
-    private void CreateNewRenderer(RenderDevice device)
-    {
-        _renderer = new BurningShipFractalRenderer(device);
-        _currentRenderDevice = device;
     }
 
     private void FractalWindow_OnLoaded(object sender, RoutedEventArgs e)
