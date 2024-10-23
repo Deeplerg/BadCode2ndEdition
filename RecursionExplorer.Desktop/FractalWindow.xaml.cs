@@ -137,8 +137,8 @@ public partial class FractalWindow : Window
         double mousePositionOffsetY = currentMousePosition.Y - _lastPanMousePosition.Y;
 
         // Adjust the pan offsets, factoring in the current zoom level
-        _panOffsetX += mousePositionOffsetX / _zoomFactor * 2;
-        _panOffsetY += mousePositionOffsetY / _zoomFactor * 2;
+        _panOffsetX -= mousePositionOffsetX / _zoomFactor * 2;
+        _panOffsetY -= mousePositionOffsetY / _zoomFactor * 2;
 
         _lastPanMousePosition = currentMousePosition;
 
