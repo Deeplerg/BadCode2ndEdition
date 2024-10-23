@@ -48,7 +48,6 @@
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <Button Name="RedrawButton" Content="Перерисовать" HorizontalAlignment="Right" Margin="10" Click="RedrawButton_OnClick" />
-                    <Button Content="Отмена" HorizontalAlignment="Right" Margin="10" />
                 </StackPanel>
             </Grid>
         </DockPanel>
